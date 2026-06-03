@@ -1,73 +1,51 @@
-# 🍕 RoomieSmart - Fase 1: Código Espagueti (Big Ball of Mud)
+# 🍕 RoomieSmart - Fase 2: Monolítico por Capas (Data-Driven)
 
-Este repositorio contiene la primera fase de la Evaluación Sumativa I. El objetivo de esta rama (`spaghetti-code`) es demostrar el antipatrón de diseño conocido como "Código Espagueti", como punto de partida para evidenciar la evolución arquitectónica hacia un Monolito por Capas y, finalmente, hacia un enfoque de Diseño Guiado por el Dominio (DDD) con Arquitectura Hexagonal.
+Esta rama (`feature/layered-monolith`) contiene la segunda fase evolutiva de la Evaluación Sumativa I. Tras abandonar el antipatrón de "Código Espagueti", el sistema ha sido refactorizado hacia una clásica **Arquitectura de 3 Capas**.
 
-El dominio elegido es **RoomieSmart**, un gestor de gastos compartidos donde un grupo de usuarios puede registrar pagos comunes y el sistema calcula automáticamente las deudas cruzadas y saldos a favor.
-
----
-
-## 🚀 Requisitos Previos
-
-Para ejecutar este proyecto, necesitas tener instalado en tu entorno:
-
-- [Node.js](https://nodejs.org/) (v16 o superior)
-- npm (Gestor de paquetes de Node)
+El objetivo de esta fase es demostrar la separación de responsabilidades técnicas y evidenciar el enfoque tradicional guiado por la base de datos (**BBDD vs DDD**), utilizando Modelos Anémicos.
 
 ---
 
-## 🛠️ Instalación y Configuración
+## 🏗️ Estructura Arquitectónica
 
-1. Clona el repositorio y posiciónate en esta rama:
-   \`\`\`bash
-   git checkout feature/spaghetti-code
-   \`\`\`
+El código ahora se divide lógicamente en componentes con responsabilidades únicas (SRP):
 
-2. Instala las dependencias del proyecto (Express y TypeScript):
-   \`\`\`bash
-   npm install
-   \`\`\`
-
-3. Asegúrate de que tu archivo `package.json` tenga la propiedad `"type": "module"` configurada para soportar la sintaxis moderna de importaciones de ECMAScript.
+1. **Capa de Presentación (`src/controllers`):** * Se encarga exclusivamente de recibir las peticiones HTTP, renderizar la interfaz HTML (vista) y manejar las redirecciones.
+   * Delega toda la lógica de cálculo a la capa subyacente.
+2. **Capa de Lógica de Negocio (`src/services`):** * Centraliza las reglas matemáticas (cálculo de cuotas y actualización de saldos). 
+   * Actúa como intermediario entre los controladores y los datos.
+3. **Capa de Acceso a Datos (`src/repositories`):** * Abstrae la persistencia de los datos. En este proyecto, simula las tablas de una base de datos relacional en memoria.
+4. **Modelos Anémicos (`src/models`):** * Estructuras de datos puras (`User`, `Expense`) que solo contienen atributos (propiedades). No poseen comportamiento ni validaciones propias.
 
 ---
 
-## ▶️ Cómo ejecutar el proyecto
+## 🚀 Requisitos y Ejecución
 
-Dado que el proyecto utiliza TypeScript de forma directa sin un paso de compilación manual previo, levantaremos el servidor utilizando `ts-node`.
+**Requisitos:** Node.js instalado en el sistema.
 
-Ejecuta el siguiente comando en la terminal, en la raíz del proyecto:
-
+**Instalación:**
+Si acabas de clonar esta rama, asegúrate de instalar las dependencias:
 \`\`\`bash
-npx ts-node --esm index.ts
+npm install
 \`\`\`
 
-Si la ejecución es exitosa, verás el siguiente mensaje en la consola:
+**Ejecución:**
+Utilizamos `tsx` para compilar y ejecutar TypeScript al vuelo sin problemas de módulos:
+\`\`\`bash
+npx tsx src/index.ts
+\`\`\`
 
-> `Servidor Espagueti VISUAL corriendo en http://localhost:3000`
-
----
-
-## 🖥️ Pruebas de Funcionamiento (Interfaz)
-
-Para facilitar la evaluación de la lógica de negocio, esta rama incluye una interfaz gráfica acoplada.
-
-1. Abre tu navegador web de preferencia.
-2. Ingresa a la URL: **http://localhost:3000**
-3. **Flujo de prueba:**
-   - Observa los saldos iniciales (en $0.00).
-   - Utiliza el formulario "Registrar Nuevo Gasto" seleccionando un pagador, ingresando un monto (ej. 30) y una descripción.
-   - Haz clic en "Calcular y Registrar".
-   - El sistema recargará la página automáticamente, mostrando el historial actualizado y los nuevos saldos calculados (saldos negativos en rojo indican deuda, saldos positivos en verde indican saldo a favor).
+La interfaz estará disponible en: **http://localhost:3000**
 
 ---
 
-## 🛑 Análisis Arquitectónico: ¿Por qué esto es un antipatrón?
+## 🛑 Análisis Crítico: Limitaciones de esta Arquitectura
 
-Como ingeniero de sistemas, es crucial identificar las deficiencias de esta implementación. Todo el sistema reside en el archivo `index.ts`, lo cual genera los siguientes problemas críticos:
+Aunque esta estructura es infinitamente superior al Código Espagueti (es más fácil de mantener, leer y testear), presenta deficiencias típicas de los sistemas tradicionales que justifican la migración a **Domain-Driven Design (DDD)**:
 
-1. **Violación del Principio de Responsabilidad Única (SRP):** El archivo inicializa el servidor web, define las estructuras de datos (simulando una base de datos en memoria), renderiza vistas HTML completas y procesa las matemáticas financieras de los saldos.
-2. **Alto Acoplamiento y Baja Cohesión:** La lógica matemática pura de dividir los gastos está atrapada dentro de la función de enrutamiento web (`app.post`). Si quisiéramos reutilizar esta lógica en una aplicación móvil o en un proceso automatizado, sería imposible sin duplicar código.
-3. **Ausencia de Modelado de Dominio:** Entidades clave del negocio como `Gasto`, `Cuota` o `Liquidación` no existen como objetos. Son simplemente variables primitivas manipuladas directamente.
-4. **Imposibilidad de Pruebas Unitarias:** Para verificar si un cálculo de $120 entre 3 personas da como resultado una deuda de $40, es obligatorio levantar el servidor web completo y simular un evento HTTP POST a través de la red o un navegador.
+1. **Enfoque Data-Driven (BBDD vs DDD):** El diseño del sistema comenzó pensando en "qué tablas necesito" (Usuarios, Gastos) en lugar de "qué comportamientos tiene el negocio".
+2. **Modelos Anémicos:** Entidades como `User` son simples contenedores de datos. El cálculo de saldos ocurre en un `ExpenseService` gigante que extrae la información del usuario, la modifica y la vuelve a guardar. Esto rompe el principio de encapsulamiento de la Programación Orientada a Objetos.
+3. **Falta de Lenguaje Ubicuo:** Los nombres de las clases y métodos son muy técnicos (`ExpenseService`, `createExpense`). En el negocio real de finanzas compartidas, conceptos como `Liquidación`, `Grupo`, o `Cuota` no están representados explícitamente en el código.
+4. **Acoplamiento a la Infraestructura:** La lógica de negocio (`ExpenseService`) sigue conociendo directamente las herramientas de acceso a datos (`Database.ts`), lo que dificulta cambiar de motor de base de datos sin alterar las reglas del negocio.
 
-**Siguiente paso evolutivo:** Rama `feature/layered-monolith` (Transición hacia una arquitectura de 3 capas impulsada por bases de datos).
+**Siguiente paso evolutivo:** Rama `feature/ddd-hexagonal` (Implementación de Lenguaje Ubicuo, Contextos Acotados, Agregados, Puertos y Adaptadores).
