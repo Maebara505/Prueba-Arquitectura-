@@ -1,6 +1,6 @@
 # 🍕 RoomieSmart - Fase 1: Código Espagueti (Big Ball of Mud)
 
-Este repositorio contiene la primera fase de la Evaluación Sumativa I. El objetivo de esta rama (`feature/spaghetti-code`) es demostrar el antipatrón de diseño conocido como "Código Espagueti", como punto de partida para evidenciar la evolución arquitectónica hacia un Monolito por Capas y, finalmente, hacia un enfoque de Diseño Guiado por el Dominio (DDD) con Arquitectura Hexagonal.
+Este repositorio contiene la primera fase de la Evaluación Sumativa I. El objetivo de esta rama (`spaghetti-code`) es demostrar el antipatrón de diseño conocido como "Código Espagueti", como punto de partida para evidenciar la evolución arquitectónica hacia un Monolito por Capas y, finalmente, hacia un enfoque de Diseño Guiado por el Dominio (DDD) con Arquitectura Hexagonal.
 
 El dominio elegido es **RoomieSmart**, un gestor de gastos compartidos donde un grupo de usuarios puede registrar pagos comunes y el sistema calcula automáticamente las deudas cruzadas y saldos a favor.
 
