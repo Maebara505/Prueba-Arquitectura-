@@ -1,0 +1,31 @@
+{
+  "name": "pruebaarqui",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "**Proyecto:** RoomieSmart - Gestor de Gastos Compartidos\r **Lenguaje:** TypeScript (Node.js)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Maebara505/Prueba-Arquitectura-.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Maebara505/Prueba-Arquitectura-/issues"
+  },
+  "homepage": "https://github.com/Maebara505/Prueba-Arquitectura-#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.9.1",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3"
+  }
+}
